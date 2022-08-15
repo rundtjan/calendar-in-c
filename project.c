@@ -7,8 +7,32 @@
 
 // TODO:: implement your project here!
 
-void print_entry(CalEntry* entry){
-  printf("%s %02d.%02d at %02d \n", entry->description, entry->day, entry->month, entry->hour);
+void print_entry(CalEntry* entry, FILE* stream){
+  fprintf(stream, "%s %02d.%02d at %02d \n", entry->description, entry->day, entry->month, entry->hour);
+}
+
+void print_whole_db(CalEntry* db, FILE* stream){
+  CalEntry* to_print = db;
+  while(1){
+    if (to_print->description != NULL) print_entry(to_print, stream);
+    if (to_print->next == NULL) break;
+    else to_print = to_print->next;
+  }
+  printf("SUCCESS\n");
+}
+
+void write_to_file(char* command_buffer, CalEntry* db){
+  char command[1];
+  char file_name[1000];
+  int read = sscanf(command_buffer, "%s %s", command, file_name);
+  if (read != 2){
+    printf("There was an error in your write command.\n");
+  } else {
+    FILE* file_ptr = fopen(file_name, "w");
+    print_whole_db(db, file_ptr);
+    fflush(file_ptr);
+    fclose(file_ptr);
+  }
 }
 
 CalEntry* entry_found_in_db(CalEntry* db, int month, int day, int hour){
@@ -107,13 +131,6 @@ void try_delete_entry(char* command_buffer, CalEntry* db, int* db_size){
     } else {
       printf("The time slot %02d.%02d at %02d is not in the calendar.\n", day, month, hour);
     };
-    /*
-    CalEntry* to_delete = entry_found_in_db(db, month, day, hour, previous);
-    if (to_delete == NULL){
-      printf("The time slot %02d.%02d at %02d is not in the calendar.\n", day, month, hour);
-    } else {
-      delete_entry_in_db(db, month, day, hour);
-    }*/
   }
 }
 
@@ -190,21 +207,11 @@ CalEntry* init_db(int* db_size){
   return db;
 }
 
-void print_whole_db(CalEntry* db){
-  CalEntry* to_print = db;
-  while(1){
-    if (to_print->description != NULL) print_entry(to_print);
-    if (to_print->next == NULL) break;
-    else to_print = to_print->next;
-  }
-  printf("SUCCESS\n");
-}
-
 void enter_test_entries(CalEntry* db, int* db_size){
   create_entry_in_db(db, "First", 1, 2, 3, db_size);
   create_entry_in_db(db, "Second", 2, 3, 4, db_size);
   printf("db size %d\n", *db_size);
-  print_whole_db(db);
+  print_whole_db(db, stdout);
 }
 
 CalEntry* free_entry(CalEntry* entry){
@@ -220,7 +227,6 @@ void free_all(CalEntry* db){
     db = free_entry(db);
     if (db == NULL) break;
   }
-
 }
 
 int main(void) {
@@ -237,7 +243,7 @@ int main(void) {
         try_add_entry(command_buffer, db, &db_size);
         break;
       case 'L':
-        print_whole_db(db);
+        print_whole_db(db, stdout);
         break;
       case 'Q':
         free_all(db);
@@ -245,6 +251,9 @@ int main(void) {
         return 0;
       case 'D':
         try_delete_entry(command_buffer, db, &db_size);
+        break;
+      case 'W':
+        write_to_file(command_buffer, db);
         break;
       default:
         printf("Invalid command %c\n", command_buffer[0]);
