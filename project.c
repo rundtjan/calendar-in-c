@@ -13,7 +13,6 @@
  */
 CalEntry* free_entry(CalEntry* entry){
   CalEntry* next = entry->next;
-  //printf("Will now free %s\n", entry->description);
   free(entry->description);
   free(entry);
   return next;
@@ -112,7 +111,7 @@ int earlier_date(CalEntry* new_db_entry, CalEntry* check){
  * @param day 
  * @param hour 
  */
-void create_ordered_entry_in_db(CalEntry* db, char* description, int month, int day, int hour){
+void create_entry_in_db(CalEntry* db, char* description, int month, int day, int hour){
   char* desc_ptr = (char*)malloc(strlen(description)+1);
   memcpy(desc_ptr, description, strlen(description)+1);
   CalEntry entry = {desc_ptr, month, day, hour, NULL};
@@ -121,7 +120,6 @@ void create_ordered_entry_in_db(CalEntry* db, char* description, int month, int 
   if (db->next == NULL){
     db->next = new_db_entry;
   } else {
-    //printf("Will try and find correct place in loop\n");
     CalEntry* previous = db;
     CalEntry* check = db->next;
     while(1){
@@ -174,7 +172,7 @@ CalEntry* load_from_file(char* command_buffer, CalEntry* db){
           free_all(new_db);
           return db;
         }
-        create_ordered_entry_in_db(new_db, description, month, day, hour);
+        create_entry_in_db(new_db, description, month, day, hour);
       }
     }
   }
@@ -330,7 +328,7 @@ void try_delete_entry(char* command_buffer, CalEntry* db){
  * @param day 
  * @param hour 
  */
-void create_entry_in_db(CalEntry* db, char* description, int month, int day, int hour){
+void create_entry_in_db_legacy(CalEntry* db, char* description, int month, int day, int hour){
   char* desc_ptr = (char*)malloc(strlen(description)+1);
   memcpy(desc_ptr, description, strlen(description)+1);
   CalEntry entry = {desc_ptr, month, day, hour, NULL};
@@ -358,8 +356,7 @@ void try_add_entry(char* command_buffer, CalEntry* db){
   if (!valid_add_args(db, command_buffer, description, &month, &day, &hour)) {
     return;
   } else {
-    //create_entry_in_db(db, description, month, day, hour, db_size);
-    create_ordered_entry_in_db(db, description, month, day, hour);
+    create_entry_in_db(db, description, month, day, hour);
   }
   printf("SUCCESS\n");
 }
