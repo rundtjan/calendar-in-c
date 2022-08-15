@@ -2,11 +2,16 @@
 #define _PROJECT__H_
 
 struct calendar_entry;
-
+/**
+ * @brief A calendar entry, properties self-explanatory
+ * 
+ */
 typedef struct calendar_entry {
   char* description;
   int month, day, hour;
   struct calendar_entry* next;
 } CalEntry;
+
+
 
 #endif //! _PROJECT__H_
