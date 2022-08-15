@@ -320,31 +320,6 @@ void try_delete_entry(char* command_buffer, CalEntry* db){
 }
 
 /**
- * @brief Create a entry in db object
- * 
- * @param db the db to create the entry in
- * @param description the description for the event
- * @param month 
- * @param day 
- * @param hour 
- */
-void create_entry_in_db_legacy(CalEntry* db, char* description, int month, int day, int hour){
-  char* desc_ptr = (char*)malloc(strlen(description)+1);
-  memcpy(desc_ptr, description, strlen(description)+1);
-  CalEntry entry = {desc_ptr, month, day, hour, NULL};
-  CalEntry* new_db_entry = (CalEntry*)malloc(sizeof(CalEntry));
-  memcpy(new_db_entry, &entry, sizeof(CalEntry));
-  CalEntry* check = db;
-  while(1){
-    if (check->next != NULL) check = check->next;
-    else {
-      check->next = new_db_entry;
-      break;
-    }
-  }
-}
-
-/**
  * @brief function to check if it's possible to add entry to db
  * 
  * @param command_buffer string containing arguments, eg. the data for the event

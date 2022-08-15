@@ -31,7 +31,6 @@ void create_entry_in_db(CalEntry* db, char* description, int month, int day, int
 CalEntry* entry_found_in_db(CalEntry* db, int month, int day, int hour);
 int delete_entry_in_db(CalEntry* db, int month, int day, int hour);
 void try_delete_entry(char* command_buffer, CalEntry* db);
-void create_entry_in_db_legacy(CalEntry* db, char* description, int month, int day, int hour);
 void try_add_entry(char* command_buffer, CalEntry* db);
 void enter_test_entries(CalEntry* db);
 
