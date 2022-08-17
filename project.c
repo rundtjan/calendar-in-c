@@ -347,6 +347,24 @@ void enter_test_entries(CalEntry* db){
   print_whole_db(db, stdout);
 }
 
+void show_help(){
+  printf("\n--------------------------------------------------------------------------------\n\n");
+  printf("This is a calender programmed in C.\n");
+  printf("\n");
+  printf("Type 'A <description> <month> <day> <hour>' as in 'A Barbershop 2 3 14' to store an event.\n");
+  printf("\n");
+  printf("Type L to list all events\n");
+  printf("\n");
+  printf("Type 'D <month> <day> <hour>' as in 'D 2 3 14' to delete an event.\n");
+  printf("\n");
+  printf("Type 'W <name of file>' eg. 'W cal.txt' to store your calendar.\n");
+  printf("\n");
+  printf("Type 'O <name of file>' eg. 'O cal.txt' to load your stored calendar.\nPlease note that this will delete any information currently in memory.\n");
+  printf("\n");
+  printf("Type Q to close the calendar. Anything not stored in a calendar-file will be deleted.\n");
+  printf("\n--------------------------------------------------------------------------------\n\n");
+}
+
 /**
  * @brief main function, test-row can be commented in if doing manual tests
  * 
@@ -356,8 +374,10 @@ int main(void) {
   CalEntry* db = init_db();
   if(db == NULL) return 0;
   //enter_test_entries(db);
+  system("clear");
   while(1){
     char command_buffer[1000];
+    printf("Enter command (H for help):");
     fgets(command_buffer, 1000, stdin);
     switch (command_buffer[0]){
       case 'A':
@@ -378,6 +398,9 @@ int main(void) {
         break;
       case 'O':
         db = load_from_file(command_buffer, db);
+        break;
+      case 'H':
+        show_help();
         break;
       default:
         printf("Invalid command %c\n", command_buffer[0]);
