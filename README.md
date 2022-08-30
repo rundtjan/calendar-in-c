@@ -1,4 +1,4 @@
-# calendar_in_c
+# A calendar in C
 
 Clone repository, cd into folder and (in linux) run 'make run' (you will need to have 'make' installed from before). This will run the app.    
   
